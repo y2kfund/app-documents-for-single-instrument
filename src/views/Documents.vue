@@ -34,8 +34,64 @@ const fileInput = ref<HTMLInputElement | null>(null)
 const description = ref('')
 const selectedFile = ref<File | null>(null)
 const showUploadDialog = ref(false)
+const showViewDialog = ref(false)
+const viewingDocument = ref<Document | null>(null)
+const documentUrl = ref<string | null>(null)
+const isLoadingPreview = ref(false)
 
 let tabulator: Tabulator | null = null
+
+const isViewableDocument = (fileType: string): boolean => {
+  const viewableTypes = [
+    'application/pdf',
+    'image/png',
+    'image/jpeg',
+    'image/jpg',
+    'image/gif',
+    'image/webp',
+    'text/plain',
+    'text/html',
+    'text/csv'
+  ]
+  return viewableTypes.includes(fileType)
+}
+
+const viewDocument = async (document: Document) => {
+  if (!isViewableDocument(document.file_type)) {
+    alert('This file type cannot be previewed. Please download it instead.')
+    return
+  }
+
+  isLoadingPreview.value = true
+  viewingDocument.value = document
+  showViewDialog.value = true
+
+  try {
+    const { data, error: downloadError } = await supabase.storage
+      .from('documents')
+      .download(document.storage_path)
+
+    if (downloadError) throw downloadError
+
+    // Create object URL for preview
+    documentUrl.value = URL.createObjectURL(data)
+  } catch (err) {
+    console.error('Error loading document preview:', err)
+    alert('Failed to load document preview')
+    showViewDialog.value = false
+  } finally {
+    isLoadingPreview.value = false
+  }
+}
+
+const closeViewDialog = () => {
+  showViewDialog.value = false
+  if (documentUrl.value) {
+    URL.revokeObjectURL(documentUrl.value)
+    documentUrl.value = null
+  }
+  viewingDocument.value = null
+}
 
 const columns: ColumnDefinition[] = [
   {
@@ -68,15 +124,23 @@ const columns: ColumnDefinition[] = [
   },
   {
     title: 'Actions',
-    width: 150,
-    formatter: () => {
-      return '<button class="btn-download">Download</button> <button class="btn-delete">Delete</button>'
+    width: 200,
+    formatter: (cell) => {
+      const document = cell.getRow().getData() as Document
+      const canView = isViewableDocument(document.file_type)
+      return `
+        ${canView ? '<button class="btn-view">View</button>' : ''}
+        <button class="btn-download">Download</button>
+        <button class="btn-delete">Delete</button>
+      `
     },
     cellClick: async (e, cell) => {
       const target = e.target as HTMLElement
       const document = cell.getRow().getData() as Document
       
-      if (target.classList.contains('btn-download')) {
+      if (target.classList.contains('btn-view')) {
+        await viewDocument(document)
+      } else if (target.classList.contains('btn-download')) {
         await downloadDocument(document)
       } else if (target.classList.contains('btn-delete')) {
         if (confirm(`Are you sure you want to delete "${document.file_name}"?`)) {
@@ -147,6 +211,9 @@ onBeforeUnmount(() => {
   if (tabulator) {
     tabulator.destroy()
   }
+  if (documentUrl.value) {
+    URL.revokeObjectURL(documentUrl.value)
+  }
 })
 </script>
 
@@ -188,6 +255,50 @@ onBeforeUnmount(() => {
             Upload
           </button>
           <button @click="showUploadDialog = false" class="btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Document Dialog -->
+    <div v-if="showViewDialog" class="modal-overlay" @click.self="closeViewDialog">
+      <div class="modal modal-large">
+        <div class="modal-header">
+          <h3>{{ viewingDocument?.file_name }}</h3>
+          <button @click="closeViewDialog" class="btn-close">×</button>
+        </div>
+        <div class="modal-body">
+          <div v-if="isLoadingPreview" class="loading-preview">Loading preview...</div>
+          <div v-else-if="documentUrl && viewingDocument">
+            <!-- PDF Preview -->
+            <iframe
+              v-if="viewingDocument.file_type === 'application/pdf'"
+              :src="documentUrl"
+              class="document-preview"
+              title="PDF Preview"
+            />
+            
+            <!-- Image Preview -->
+            <img
+              v-else-if="viewingDocument.file_type.startsWith('image/')"
+              :src="documentUrl"
+              :alt="viewingDocument.file_name"
+              class="image-preview"
+            />
+            
+            <!-- Text Preview -->
+            <iframe
+              v-else-if="viewingDocument.file_type.startsWith('text/')"
+              :src="documentUrl"
+              class="document-preview"
+              title="Text Preview"
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button @click="downloadDocument(viewingDocument!)" class="btn-primary">
+            Download
+          </button>
+          <button @click="closeViewDialog" class="btn-secondary">Close</button>
         </div>
       </div>
     </div>
@@ -258,6 +369,87 @@ onBeforeUnmount(() => {
   border-radius: 8px;
   min-width: 500px;
   max-width: 90%;
+}
+
+.modal-large {
+  min-width: 80%;
+  max-width: 95%;
+  min-height: 80vh;
+  max-height: 95vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 1px solid #ddd;
+}
+
+.modal-header h3 {
+  margin: 0;
+  flex: 1;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 32px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.btn-close:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.modal-body {
+  flex: 1;
+  overflow: auto;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-preview {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 18px;
+}
+
+.document-preview {
+  width: 100%;
+  height: 70vh;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.image-preview {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 20px 30px;
+  border-top: 1px solid #ddd;
 }
 
 .modal h3 {
@@ -340,14 +532,24 @@ onBeforeUnmount(() => {
   background-color: #e0e0e0;
 }
 
+:deep(.btn-view),
 :deep(.btn-download),
 :deep(.btn-delete) {
   padding: 5px 10px;
-  margin: 0 5px;
+  margin: 0 2px;
   border: none;
   border-radius: 3px;
   cursor: pointer;
   font-size: 12px;
+}
+
+:deep(.btn-view) {
+  background-color: #9C27B0;
+  color: white;
+}
+
+:deep(.btn-view:hover) {
+  background-color: #7B1FA2;
 }
 
 :deep(.btn-download) {
