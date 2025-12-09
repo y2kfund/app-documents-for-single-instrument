@@ -112,13 +112,13 @@ const columns: ColumnDefinition[] = [
     title: 'Type',
     field: 'file_type',
     width: 150
-  },*/
+  },
   {
     title: 'Uploaded',
     field: 'uploaded_at',
     width: 180,
     formatter: (cell) => new Date(cell.getValue()).toLocaleString()
-  },
+  },*/
   {
     title: 'Actions',
     width: 220,
@@ -190,8 +190,8 @@ onMounted(async () => {
       data: documents.value,
       columns,
       layout: 'fitColumns',
-      height: '500px',
-      pagination: true,
+      //height: '500px',
+      pagination: false,
       paginationSize: 20,
       reactiveData: true
     })
@@ -214,7 +214,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="documents-view">
     <div class="header">
-      <h2>Documents for Instrument: {{ props.symbolRoot }}</h2>
+      <h2>Documents</h2>
       <button @click="openUploadDialog" class="btn-upload">Upload</button>
     </div>
 
@@ -259,6 +259,20 @@ onBeforeUnmount(() => {
 
 <style>
 @import 'tabulator-tables/dist/css/tabulator_modern.min.css';
+
+.documents-view .tabulator .tabulator-header,
+.documents-view .tabulator .tabulator-row,
+.documents-view .tabulator .tabulator-header .tabulator-col,
+.documents-view .tabulator-row .tabulator-cell,
+.documents-view .tabulator .tabulator-tableholder .tabulator-table,
+.documents-view .tabulator .tabulator-row:hover {
+    background-color: transparent;
+}
+
+.documents-view .tabulator {
+    background-color: transparent;
+    border: none;
+}
 </style>
 
 <style scoped>

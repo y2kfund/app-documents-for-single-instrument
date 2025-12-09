@@ -1,21 +1,32 @@
 .documents-view {
-  padding: 20px;
+    padding: 0.25rem;
+    background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+    border-left: 4px solid #9c27b0;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px #0000001a;
+}
+
+.documents-view h2 {
+    font-size: 18px;
+    margin: 0;
+    color: #333;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
 }
 
 .btn-upload {
-  padding: 10px 20px;
+  padding: 0.25rem 0.75rem;
   background-color: #4CAF50;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 0.8rem;
+  width: auto;
 }
 
 .btn-upload:hover {
@@ -146,6 +157,7 @@
   border-radius: 3px;
   cursor: pointer;
   font-size: 12px;
+  width: auto;
 }
 
 :deep(.btn-view) {
