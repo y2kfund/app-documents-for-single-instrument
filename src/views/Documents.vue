@@ -94,7 +94,7 @@ const columns: ColumnDefinition[] = [
   {
     title: 'File Name',
     field: 'file_name',
-    headerFilter: 'input',
+    //headerFilter: 'input',
     widthGrow: 2
   },
   {
@@ -102,7 +102,7 @@ const columns: ColumnDefinition[] = [
     field: 'description',
     widthGrow: 2
   },
-  {
+  /*{
     title: 'Size',
     field: 'file_size',
     width: 100,
@@ -112,7 +112,7 @@ const columns: ColumnDefinition[] = [
     title: 'Type',
     field: 'file_type',
     width: 150
-  },
+  },*/
   {
     title: 'Uploaded',
     field: 'uploaded_at',
@@ -121,7 +121,7 @@ const columns: ColumnDefinition[] = [
   },
   {
     title: 'Actions',
-    width: 200,
+    width: 220,
     formatter: (cell) => {
       const document = cell.getRow().getData() as Document
       const canView = isViewableDocument(document.file_type)
@@ -215,7 +215,7 @@ onBeforeUnmount(() => {
   <div class="documents-view">
     <div class="header">
       <h2>Documents for Instrument: {{ props.symbolRoot }}</h2>
-      <button @click="openUploadDialog" class="btn-upload">Upload Document</button>
+      <button @click="openUploadDialog" class="btn-upload">Upload</button>
     </div>
 
     <div v-if="error" class="error-message">{{ error }}</div>
@@ -262,180 +262,5 @@ onBeforeUnmount(() => {
 </style>
 
 <style scoped>
-.documents-view {
-  padding: 20px;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.btn-upload {
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.btn-upload:hover {
-  background-color: #45a049;
-}
-
-.error-message {
-  color: #f44336;
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: #ffebee;
-  border-radius: 4px;
-}
-
-.loading {
-  text-align: center;
-  padding: 20px;
-  color: #666;
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal {
-  background: white;
-  padding: 30px;
-  border-radius: 8px;
-  min-width: 500px;
-  max-width: 90%;
-}
-
-.modal h3 {
-  margin-top: 0;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.form-group input[type="file"],
-.form-group textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.file-info {
-  margin-top: 10px;
-  color: #666;
-  font-size: 14px;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 20px;
-  background-color: #f0f0f0;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 20px;
-}
-
-.progress {
-  height: 100%;
-  background-color: #4CAF50;
-  transition: width 0.3s ease;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-}
-
-.btn-primary,
-.btn-secondary {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background-color: #2196F3;
-  color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: #0b7dda;
-}
-
-.btn-primary:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-.btn-secondary:hover {
-  background-color: #e0e0e0;
-}
-
-:deep(.btn-view),
-:deep(.btn-download),
-:deep(.btn-delete) {
-  padding: 5px 10px;
-  margin: 0 2px;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  font-size: 12px;
-}
-
-:deep(.btn-view) {
-  background-color: #9C27B0;
-  color: white;
-}
-
-:deep(.btn-view:hover) {
-  background-color: #7B1FA2;
-}
-
-:deep(.btn-download) {
-  background-color: #2196F3;
-  color: white;
-}
-
-:deep(.btn-download:hover) {
-  background-color: #0b7dda;
-}
-
-:deep(.btn-delete) {
-  background-color: #f44336;
-  color: white;
-}
-
-:deep(.btn-delete:hover) {
-  background-color: #da190b;
-}
+@import '../styles/scoped-styles.css';
 </style>
