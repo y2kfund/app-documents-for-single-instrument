@@ -6291,7 +6291,7 @@ var os = {
     i.setDate(i.getDate() + 1e4), document.cookie = l + "-" + e + "=" + JSON.stringify(t) + "; expires=" + i.toUTCString();
   }
 };
-const O = class O extends w {
+const H = class H extends w {
   constructor(e) {
     super(e), this.mode = "", this.id = "", this.defWatcherBlock = !1, this.config = {}, this.readFunc = !1, this.writeFunc = !1, this.registerTableOption("persistence", !1), this.registerTableOption("persistenceID", ""), this.registerTableOption("persistenceMode", !0), this.registerTableOption("persistenceReaderFunc", !1), this.registerTableOption("persistenceWriterFunc", !1);
   }
@@ -6308,7 +6308,7 @@ const O = class O extends w {
   initialize() {
     if (this.table.options.persistence) {
       var e = this.table.options.persistenceMode, t = this.table.options.persistenceID, i;
-      this.mode = e !== !0 ? e : this.localStorageTest() ? "local" : "cookie", this.table.options.persistenceReaderFunc ? typeof this.table.options.persistenceReaderFunc == "function" ? this.readFunc = this.table.options.persistenceReaderFunc : O.readers[this.table.options.persistenceReaderFunc] ? this.readFunc = O.readers[this.table.options.persistenceReaderFunc] : console.warn("Persistence Read Error - invalid reader set", this.table.options.persistenceReaderFunc) : O.readers[this.mode] ? this.readFunc = O.readers[this.mode] : console.warn("Persistence Read Error - invalid reader set", this.mode), this.table.options.persistenceWriterFunc ? typeof this.table.options.persistenceWriterFunc == "function" ? this.writeFunc = this.table.options.persistenceWriterFunc : O.writers[this.table.options.persistenceWriterFunc] ? this.writeFunc = O.writers[this.table.options.persistenceWriterFunc] : console.warn("Persistence Write Error - invalid reader set", this.table.options.persistenceWriterFunc) : O.writers[this.mode] ? this.writeFunc = O.writers[this.mode] : console.warn("Persistence Write Error - invalid writer set", this.mode), this.id = "tabulator-" + (t || this.table.element.getAttribute("id") || ""), this.config = {
+      this.mode = e !== !0 ? e : this.localStorageTest() ? "local" : "cookie", this.table.options.persistenceReaderFunc ? typeof this.table.options.persistenceReaderFunc == "function" ? this.readFunc = this.table.options.persistenceReaderFunc : H.readers[this.table.options.persistenceReaderFunc] ? this.readFunc = H.readers[this.table.options.persistenceReaderFunc] : console.warn("Persistence Read Error - invalid reader set", this.table.options.persistenceReaderFunc) : H.readers[this.mode] ? this.readFunc = H.readers[this.mode] : console.warn("Persistence Read Error - invalid reader set", this.mode), this.table.options.persistenceWriterFunc ? typeof this.table.options.persistenceWriterFunc == "function" ? this.writeFunc = this.table.options.persistenceWriterFunc : H.writers[this.table.options.persistenceWriterFunc] ? this.writeFunc = H.writers[this.table.options.persistenceWriterFunc] : console.warn("Persistence Write Error - invalid reader set", this.table.options.persistenceWriterFunc) : H.writers[this.mode] ? this.writeFunc = H.writers[this.mode] : console.warn("Persistence Write Error - invalid writer set", this.mode), this.id = "tabulator-" + (t || this.table.element.getAttribute("id") || ""), this.config = {
         sort: this.table.options.persistence === !0 || this.table.options.persistence.sort,
         filter: this.table.options.persistence === !0 || this.table.options.persistence.filter,
         headerFilter: this.table.options.persistence === !0 || this.table.options.persistence.headerFilter,
@@ -6448,9 +6448,9 @@ const O = class O extends w {
     }), t;
   }
 };
-b(O, "moduleName", "persistence"), b(O, "moduleInitOrder", -10), //load defaults
-b(O, "readers", os), b(O, "writers", as);
-let Be = O;
+b(H, "moduleName", "persistence"), b(H, "moduleInitOrder", -10), //load defaults
+b(H, "readers", os), b(H, "writers", as);
+let Be = H;
 class ct extends w {
   constructor(e) {
     super(e), this.columnSubscribers = {}, this.registerTableOption("rowContextPopup", !1), this.registerTableOption("rowClickPopup", !1), this.registerTableOption("rowDblClickPopup", !1), this.registerTableOption("groupContextPopup", !1), this.registerTableOption("groupClickPopup", !1), this.registerTableOption("groupDblClickPopup", !1), this.registerColumnOption("headerContextPopup"), this.registerColumnOption("headerClickPopup"), this.registerColumnOption("headerDblClickPopup"), this.registerColumnOption("headerPopup"), this.registerColumnOption("headerPopupIcon"), this.registerColumnOption("contextPopup"), this.registerColumnOption("clickPopup"), this.registerColumnOption("dblClickPopup"), this.registerComponentFunction("cell", "popup", this._componentPopupCall.bind(this)), this.registerComponentFunction("column", "popup", this._componentPopupCall.bind(this)), this.registerComponentFunction("row", "popup", this._componentPopupCall.bind(this)), this.registerComponentFunction("group", "popup", this._componentPopupCall.bind(this));
@@ -10395,19 +10395,19 @@ function qs(l, e) {
   }
   function f(p, g, v, m) {
     var C = [], x = 0, L = 0, k = 0, F = n, N = 0, E = 0, R = [];
-    function H(y) {
+    function P(y) {
       return v * (y.column.definition.widthGrow || 1);
     }
     function A(y) {
       return c(y.width) - v * (y.column.definition.widthShrink || 0);
     }
     return p.forEach(function(y, gn) {
-      var qe = m ? A(y) : H(y);
+      var qe = m ? A(y) : P(y);
       y.column.minWidth >= qe ? C.push(y) : y.column.maxWidth && y.column.maxWidth < qe ? (y.width = y.column.maxWidth, g -= y.column.maxWidth, F -= m ? y.column.definition.widthShrink || 1 : y.column.definition.widthGrow || 1, F && (v = Math.floor(g / F))) : (R.push(y), E += m ? y.column.definition.widthShrink || 1 : y.column.definition.widthGrow || 1);
     }), C.length ? (C.forEach(function(y) {
       x += m ? y.width - y.column.minWidth : y.column.minWidth, y.width = y.column.minWidth;
     }), L = g - x, k = E ? Math.floor(L / E) : L, N = f(R, L, k, m)) : (N = E ? g - Math.floor(g / E) * E : g, R.forEach(function(y) {
-      y.width = m ? A(y) : H(y);
+      y.width = m ? A(y) : P(y);
     })), N;
   }
   this.table.options.responsiveLayout && this.table.modExists("responsiveLayout", !0) && this.table.modules.responsiveLayout.update(), this.table.rowManager.element.scrollHeight > this.table.rowManager.element.clientHeight && (t -= this.table.rowManager.element.offsetWidth - this.table.rowManager.element.clientWidth), l.forEach(function(p) {
@@ -10598,39 +10598,39 @@ var Qs = /* @__PURE__ */ Object.freeze({
   LayoutModule: Ge,
   LocalizeModule: je
 });
-const P = class P {
+const O = class O {
   static findTable(e) {
-    var t = P.registry.lookupTable(e, !0);
+    var t = O.registry.lookupTable(e, !0);
     return Array.isArray(t) && !t.length ? !1 : t;
   }
 };
-b(P, "registry", {
+b(O, "registry", {
   tables: [],
   register(e) {
-    P.registry.tables.push(e);
+    O.registry.tables.push(e);
   },
   deregister(e) {
-    var t = P.registry.tables.indexOf(e);
-    t > -1 && P.registry.tables.splice(t, 1);
+    var t = O.registry.tables.indexOf(e);
+    t > -1 && O.registry.tables.splice(t, 1);
   },
   lookupTable(e, t) {
     var i = [], s, n;
     if (typeof e == "string") {
       if (s = document.querySelectorAll(e), s.length)
         for (var r = 0; r < s.length; r++)
-          n = P.registry.matchElement(s[r]), n && i.push(n);
-    } else typeof HTMLElement < "u" && e instanceof HTMLElement || e instanceof P ? (n = P.registry.matchElement(e), n && i.push(n)) : Array.isArray(e) ? e.forEach(function(o) {
-      i = i.concat(P.registry.lookupTable(o));
+          n = O.registry.matchElement(s[r]), n && i.push(n);
+    } else typeof HTMLElement < "u" && e instanceof HTMLElement || e instanceof O ? (n = O.registry.matchElement(e), n && i.push(n)) : Array.isArray(e) ? e.forEach(function(o) {
+      i = i.concat(O.registry.lookupTable(o));
     }) : t || console.warn("Table Connection Error - Invalid Selector", e);
     return i;
   },
   matchElement(e) {
-    return P.registry.tables.find(function(t) {
-      return e instanceof P ? t === e : t.element === e;
+    return O.registry.tables.find(function(t) {
+      return e instanceof O ? t === e : t.element === e;
     });
   }
 });
-let Ue = P;
+let Ue = O;
 const T = class T extends Ue {
   constructor() {
     super();
@@ -11173,8 +11173,8 @@ const nn = { class: "documents-view" }, rn = {
         return;
       }
       try {
-        const { data: R, error: H } = await t.storage.from("documents").download(E.storage_path);
-        if (H) throw H;
+        const { data: R, error: P } = await t.storage.from("documents").download(E.storage_path);
+        if (P) throw P;
         const A = URL.createObjectURL(R), y = window.open(A, "_blank");
         y ? (y.document.title = E.file_name, setTimeout(() => {
           URL.revokeObjectURL(A);
@@ -11223,8 +11223,8 @@ const nn = { class: "documents-view" }, rn = {
       `;
         },
         cellClick: async (E, R) => {
-          const H = E.target, A = R.getRow().getData();
-          H.classList.contains("btn-view") ? await x(A) : H.classList.contains("btn-download") ? await h(A) : H.classList.contains("btn-delete") && confirm(`Are you sure you want to delete "${A.file_name}"?`) && await d(A);
+          const A = E.target.closest("button"), y = R.getRow().getData();
+          A && (A.classList.contains("btn-view") ? await x(y) : A.classList.contains("btn-download") ? await h(y) : A.classList.contains("btn-delete") && confirm(`Are you sure you want to delete "${y.file_name}"?`) && await d(y));
         }
       }
     ], k = (E) => {
@@ -11271,7 +11271,7 @@ const nn = { class: "documents-view" }, rn = {
       v.value ? (ee(), Z("div", {
         key: 2,
         class: "modal-overlay",
-        onClick: R[2] || (R[2] = Dt((H) => v.value = !1, ["self"]))
+        onClick: R[2] || (R[2] = Dt((P) => v.value = !1, ["self"]))
       }, [
         D("div", an, [
           R[6] || (R[6] = D("h3", null, "Upload Document", -1)),
@@ -11289,7 +11289,7 @@ const nn = { class: "documents-view" }, rn = {
           D("div", dn, [
             R[5] || (R[5] = D("label", null, "Description (optional):", -1)),
             zt(D("textarea", {
-              "onUpdate:modelValue": R[0] || (R[0] = (H) => p.value = H),
+              "onUpdate:modelValue": R[0] || (R[0] = (P) => p.value = P),
               rows: "3",
               placeholder: "Enter document description"
             }, null, 512), [
@@ -11309,7 +11309,7 @@ const nn = { class: "documents-view" }, rn = {
               class: "btn-primary"
             }, " Upload ", 8, fn),
             D("button", {
-              onClick: R[1] || (R[1] = (H) => v.value = !1),
+              onClick: R[1] || (R[1] = (P) => v.value = !1),
               class: "btn-secondary"
             }, "Cancel")
           ])
@@ -11326,7 +11326,7 @@ const nn = { class: "documents-view" }, rn = {
   for (const [i, s] of e)
     t[i] = s;
   return t;
-}, yn = /* @__PURE__ */ mn(pn, [["__scopeId", "data-v-bdc6320b"]]);
+}, yn = /* @__PURE__ */ mn(pn, [["__scopeId", "data-v-9d963898"]]);
 export {
   yn as default,
   yn as documents

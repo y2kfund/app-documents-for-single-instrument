@@ -133,13 +133,16 @@ const columns: ColumnDefinition[] = [
     },
     cellClick: async (e, cell) => {
       const target = e.target as HTMLElement
+      const btn = target.closest('button') as HTMLElement | null
       const document = cell.getRow().getData() as Document
       
-      if (target.classList.contains('btn-view')) {
+      if (!btn) return
+
+      if (btn.classList.contains('btn-view')) {
         await viewDocument(document)
-      } else if (target.classList.contains('btn-download')) {
+      } else if (btn.classList.contains('btn-download')) {
         await downloadDocument(document)
-      } else if (target.classList.contains('btn-delete')) {
+      } else if (btn.classList.contains('btn-delete')) {
         if (confirm(`Are you sure you want to delete "${document.file_name}"?`)) {
           await deleteDocument(document)
         }
